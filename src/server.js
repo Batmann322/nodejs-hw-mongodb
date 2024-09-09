@@ -29,19 +29,19 @@ export const setupServer = () => {
     });
   });
 
-  app.get('/contacts/:Id', async (req, res) => {
-    const { id } = req.params;
-    const data = await contactServices.getContactById(id);
+  app.get('/contacts/:ContactId', async (req, res) => {
+    const { ContactId } = req.params;
+    const data = await contactServices.getContactById(ContactId);
 
     if (!data) {
       return res.status(404).json({
-        message: `Contact with id=${id} not found`,
+        message: `Contact with id=${ContactId} not found`,
       });
     }
 
     res.json({
       status: 200,
-      message: `Contact with ${id} successfully find`,
+      message: `Contact with ${ContactId} successfully find`,
       data,
     });
   });
