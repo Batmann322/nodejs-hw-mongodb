@@ -1,1 +1,1 @@
-export const contactTypeList = ['personal', 'home'];
+export const contactTypeList = ['work', 'home', 'personal'];

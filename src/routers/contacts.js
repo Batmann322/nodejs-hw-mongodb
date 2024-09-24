@@ -7,6 +7,7 @@ import {
   contactAddSchema,
   contactPatchSchema,
 } from '../validation/contacts.js';
+
 const contactsRouter = Router();
 
 contactsRouter.get(

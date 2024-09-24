@@ -14,6 +14,9 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
+    email: {
+      type: String,
+    },
     isFavourite: {
       type: Boolean,
       default: false,
@@ -25,14 +28,6 @@ const contactSchema = new Schema(
       required: true,
       default: 'personal',
     },
-    // createdAt: {
-    //   type: String,
-    //   required: true,
-    // },
-    // updatedAt: {
-    //   type: String,
-    //   required: true,
-    // },
   },
   { versionKey: false, timestamps: true },
 );
