@@ -1,6 +1,9 @@
 import { Schema, model } from 'mongoose';
 
-import { contactTypeList } from '../../constants/conatcts.js';
+import {
+  contactTypeList,
+  phoneNumberRegexp,
+} from '../../constants/conatcts.js';
 
 import { handleSaveError, setUpdateOptions } from '../hooks/hooks.js';
 
@@ -8,11 +11,14 @@ const contactSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'name must be exist'],
+      min: 3,
+      max: 20,
     },
     phoneNumber: {
       type: String,
-      required: true,
+      required: [true, 'type of contact must be exist'],
+      match: phoneNumberRegexp,
     },
     email: {
       type: String,
@@ -20,12 +26,11 @@ const contactSchema = new Schema(
     isFavourite: {
       type: Boolean,
       default: false,
-      required: true,
     },
     contactType: {
       type: String,
       enum: contactTypeList,
-      required: true,
+      required: [true, 'type of contact must be exist'],
       default: 'personal',
     },
   },

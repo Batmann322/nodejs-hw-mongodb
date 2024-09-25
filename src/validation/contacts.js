@@ -1,30 +1,29 @@
 import Joi from 'joi';
 
 import { contactTypeList } from '../constants/conatcts.js';
+import { phoneNumberRegexp } from '../constants/conatcts.js';
 
 export const contactAddSchema = Joi.object({
-  name: Joi.string().min(3).max(30).required().messages({
-    'string.min': 'Username should have at least 3 characters',
-    'string.max': 'Username should have at most 20 characters',
+  name: Joi.string().min(3).max(20).required().messages({
     'any.required': 'name must be exist',
   }),
-  phoneNumber: Joi.string().required(),
-  email: Joi.string(),
+  phoneNumber: Joi.string().pattern(phoneNumberRegexp).required().messages({
+    'any.required': 'number must be exist',
+  }),
+  email: Joi.string().email().allow(null, ''),
   isFavourite: Joi.boolean(),
   contactType: Joi.string()
-    .min(3)
-    .max(20)
     .valid(...contactTypeList)
-    .required(),
+    .required()
+    .messages({
+      'any.required': 'type of contact must be exist',
+    }),
 });
 
 export const contactPatchSchema = Joi.object({
-  name: Joi.string().messages({
-    'string.min': 'Username should have at least 3 characters',
-    'string.max': 'Username should have at most 20 characters',
-  }),
-  phoneNumber: Joi.string(),
-  email: Joi.string(),
+  name: Joi.string(),
+  phoneNumber: Joi.string().pattern(phoneNumberRegexp),
+  email: Joi.string().email().allow(null, ''),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid(...contactTypeList),
 });

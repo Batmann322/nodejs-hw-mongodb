@@ -30,7 +30,7 @@ contactsRouter.post(
 contactsRouter.put(
   '/:ContactId',
   isValidId,
-  validateBody(contactAddSchema),
+  validateBody(contactPatchSchema),
   ctrlWrapper(contactController.upsertContactController),
 );
 
