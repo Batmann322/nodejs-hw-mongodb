@@ -10,14 +10,14 @@ export const getAllContacts = async ({
 }) => {
   const skip = (page - 1) * perPage;
   const contactQuery = ContactCollection.find();
+  const count = await ContactCollection.find()
+    .merge(contactQuery)
+    .countDocuments();
 
   const data = await contactQuery
     .skip(skip)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
-  const count = await ContactCollection.find()
-    .merge(contactQuery)
-    .countDocuments();
   const paginationData = calculatePaginationData({ count, perPage, page });
 
   return {
