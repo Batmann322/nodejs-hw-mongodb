@@ -1,4 +1,5 @@
 const parseInteger = (value, defaultValue) => {
+  console.log(value);
   if (typeof value !== 'string') return defaultValue;
 
   const parsedValue = parseInt(value);
