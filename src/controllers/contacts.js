@@ -7,12 +7,14 @@ import { sortFields } from '../db/models/Contacts.js';
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams({ ...req.query, sortFields });
+  const { _id: userId } = req.user;
 
   const data = await contactServices.getAllContacts({
     perPage,
     page,
     sortBy,
     sortOrder,
+    userId,
   });
 
   res.json({
@@ -24,7 +26,8 @@ export const getAllContactsController = async (req, res) => {
 
 export const getContactByIdController = async (req, res) => {
   const { ContactId } = req.params;
-  const data = await contactServices.getContactById(ContactId);
+  const { _id: userId } = req.user;
+  const data = await contactServices.getContactById({ _id: ContactId, userId });
 
   if (!data) {
     throw createHttpError(404, `Contact not found`);
@@ -38,7 +41,8 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  const data = await contactServices.createContact(req.body);
+  const { _id: userId } = req.user;
+  const data = await contactServices.createContact({ ...req.body, userId });
 
   res.status(201).json({
     status: 201,
@@ -49,8 +53,9 @@ export const addContactController = async (req, res) => {
 
 export const upsertContactController = async (req, res) => {
   const { ContactId } = req.params;
+  const { _id: userId } = req.user;
   const { isNew, data } = await contactServices.updateContact(
-    { _id: ContactId },
+    { _id: ContactId, userId },
     req.body,
     { upsert: true },
   );
@@ -65,8 +70,9 @@ export const upsertContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { ContactId } = req.params;
+  const { _id: userId } = req.user;
   const result = await contactServices.updateContact(
-    { _id: ContactId },
+    { _id: ContactId, userId },
     req.body,
   );
 
@@ -83,7 +89,8 @@ export const patchContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res) => {
   const { ContactId } = req.params;
-  const data = await contactServices.deleteContatc({ _id: ContactId });
+  const { _id: userId } = req.user;
+  const data = await contactServices.deleteContatc({ _id: ContactId, userId });
 
   if (!data) {
     throw createHttpError(404, `Contact not found`);
