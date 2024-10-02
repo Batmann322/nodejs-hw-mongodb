@@ -1,14 +1,30 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { randomBytes } from 'crypto';
+import * as path from 'node:path';
+import * as fs from 'node:fs/promises';
+import handlebars from 'handlebars';
 
 import UserCollection from '../db/models/User.js';
 import SessionCollection from '../db/models/Session.js';
+
+import sendEmail from '../utils/sendEmail.js';
+import { env } from '../utils/env.js';
+import { createJwtToken, verifyToken } from '../utils/jwt.js';
 
 import {
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/users.js';
+
+import { TEMPLATES_DIR } from '../constants/index.js';
+
+const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
+
+const verifyEmailTemplateSource = await fs.readFile(
+  verifyEmailTemplatePath,
+  'utf-8',
+);
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -24,6 +40,8 @@ const createSession = () => {
   };
 };
 
+const appDomain = env('APP_DOMAIN');
+
 export const register = async (payload) => {
   const { email, password } = payload;
   const user = await UserCollection.findOne({ email });
@@ -38,7 +56,33 @@ export const register = async (payload) => {
     password: hashPassword,
   });
   delete data._doc.password;
+
+  const jwtToken = createJwtToken({ email });
+  const template = handlebars.compile(verifyEmailTemplateSource);
+  const html = template({ appDomain, jwtToken });
+
+  const verifyEmail = {
+    to: email,
+    subject: 'Verify email',
+    html,
+  };
+  await sendEmail(verifyEmail);
+
   return data._doc;
+};
+
+export const verify = async (token) => {
+  const { data, error } = verifyToken(token);
+  if (error) {
+    throw createHttpError(401, 'Token invalid');
+  }
+
+  const user = await UserCollection.findOne({ email: data.email });
+  if (user.verify) {
+    throw createHttpError(401, 'Email already verify');
+  }
+
+  await UserCollection.findOneAndUpdate({ _id: user._id }, { verify: true });
 };
 
 export const login = async (payload) => {
@@ -46,6 +90,10 @@ export const login = async (payload) => {
   const user = await UserCollection.findOne({ email });
   if (!user) {
     throw createHttpError(401, 'Email or password invalid');
+  }
+
+  if (!user.verify) {
+    throw createHttpError(401, 'Email not verify');
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
