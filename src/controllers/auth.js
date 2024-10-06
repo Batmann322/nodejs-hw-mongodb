@@ -15,33 +15,21 @@ const setupSession = (res, session) => {
 
 export const registerController = async (req, res) => {
   const newUser = await authServices.register(req.body);
-
   res.status(201).json({
     status: 201,
-    message: 'Succsessfully register user',
+    message: 'Successfully registered a user!',
     data: newUser,
   });
 };
 
-export const verifyController = async (req, res) => {
-  const { token } = req.query;
-  await authServices.verify(token);
-
-  res.json({
-    status: 200,
-    message: 'Email verified successfully',
-    data: {},
-  });
-};
-
-export const signinController = async (req, res) => {
-  const session = await authServices.signin(req.body);
+export const loginController = async (req, res) => {
+  const session = await authServices.login(req.body);
 
   setupSession(res, session);
 
   res.json({
     status: 200,
-    message: 'Successfully signin',
+    message: 'Successfully logged in an user!',
     data: {
       accessToken: session.accessToken,
     },
@@ -59,7 +47,7 @@ export const refreshController = async (req, res) => {
 
   res.json({
     status: 200,
-    message: 'Successfully refresh session',
+    message: 'Successfully refreshed a session!',
     data: {
       accessToken: session.accessToken,
     },
@@ -77,11 +65,12 @@ export const logoutController = async (req, res) => {
 
   res.status(204).send();
 };
-export const requestResetEmailController = async (req, res) => {
+
+export const sendResetEmailController = async (req, res) => {
   await requestResetToken(req.body.email);
   res.json({
-    message: 'Reset password email has been successfully sent.',
     status: 200,
+    message: 'Reset password email was successfully sent.',
     data: {},
   });
 };
@@ -89,8 +78,8 @@ export const requestResetEmailController = async (req, res) => {
 export const resetPasswordController = async (req, res) => {
   await resetPassword(req.body);
   res.json({
-    message: 'Password was successfully reset!',
     status: 200,
+    message: 'Password has been successfully reset.',
     data: {},
   });
 };

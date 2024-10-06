@@ -12,7 +12,7 @@ export const userLoginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-export const requestResetEmailSchema = Joi.object({
+export const sendResetEmailSchema = Joi.object({
   email: Joi.string().email().required(),
 });
 
