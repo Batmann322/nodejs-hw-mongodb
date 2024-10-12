@@ -8,20 +8,16 @@ security:
 parameters:
   - in: path
     name: contactId
-    required: true
     schema:
       type: string
-      example: '66fe6dcb5b7ffb5c70dfd4a0'
+    required: true
+    description: The ID of the contact to update
 requestBody:
   content:
     multipart/form-data:
       schema:
         type: object
         properties:
-          _id:
-            description: "Contact's id"
-            type: string
-            example: 65e4decdd286b30065d54af9
           name:
             description: "Contact's name"
             type: string
@@ -43,47 +39,25 @@ requestBody:
             type: string
             enum: ['work', 'personal']
             example: 'work'
-          userId:
-            description: "Contact's parent id"
-            type: string
-            example: 65e4decdd286b30065d54af9
           photo:
             description: "Link to contact's photo"
             type: string
             format: binary
 responses:
   '200':
-    description: 'Get contact by id'
+    description: Contact updated successfully
     content:
       application/json:
         schema:
           type: object
-          required:
-            - status
-            - message
-            - data
           properties:
             status:
               type: integer
               example: 200
             message:
               type: string
-              example: Successfully patched a contact!
+              example: Successfully patched the contact!
             data:
-              type: object
-              $ref: ..\..\components\schemas\contact.yaml
+              $ref: '../../components/schemas/contact.yaml'
   '401':
-    $ref: ..\..\components\responses\401.yaml
-  '404':
-    description: 'Contact not found'
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 404
-            message:
-              type: string
-              example: 'Contact not found'
+    $ref: '../../components/responses/401.yaml'
