@@ -33,9 +33,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Get list of contacts",
-        "operationId": "getContacts",
-        "description": "Get list of contacts",
+        "summary": "Get contact by id",
+        "operationId": "getContact",
+        "description": "Get contact by id",
         "security": [
           {
             "bearerAuth": []
@@ -47,59 +47,14 @@
             "name": "contactId",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": "ID of the contact"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer"
-            },
-            "example": 1
-          },
-          {
-            "in": "query",
-            "name": "perPage",
-            "schema": {
-              "type": "integer",
-              "example": 10
-            }
-          },
-          {
-            "in": "query",
-            "name": "sortBy",
-            "schema": {
               "type": "string",
-              "example": "name"
-            },
-            "description": "All contact's fields can be mentioned. Default value - _id"
-          },
-          {
-            "in": "query",
-            "name": "sortOrder",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "example": "asc"
-            }
-          },
-          {
-            "in": "query",
-            "name": "contactType",
-            "schema": {
-              "type": "string",
-              "example": "home"
+              "example": "65ca67e7ae7f10c88b598384"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully found contacts!",
+            "description": "Get contact by id",
             "content": {
               "application/json": {
                 "schema": {
@@ -116,51 +71,11 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully found contacts!"
+                      "example": "Successfully found contact with id 65ca67e7ae7f10c88b598384!"
                     },
                     "data": {
                       "type": "object",
-                      "required": [
-                        "contacts",
-                        "page",
-                        "perPage",
-                        "totalItems",
-                        "totalPages",
-                        "hasNextPage",
-                        "hasPreviousPage"
-                      ],
-                      "properties": {
-                        "contacts": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/contact"
-                          }
-                        },
-                        "page": {
-                          "type": "number",
-                          "example": 2
-                        },
-                        "perPage": {
-                          "type": "number",
-                          "example": 4
-                        },
-                        "totalItems": {
-                          "type": "number",
-                          "example": 4
-                        },
-                        "totalPages": {
-                          "type": "number",
-                          "example": 4
-                        },
-                        "hasNextPage": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "hasPreviousPage": {
-                          "type": "boolean",
-                          "example": true
-                        }
-                      }
+                      "$ref": "#/components/schemas/contact"
                     }
                   }
                 }
@@ -176,9 +91,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Delete contact by id",
-        "operationId": "deleteContactById",
-        "description": "Delete contact by id",
+        "summary": "Delete contact",
+        "operationId": "deleteContact",
+        "description": "Delete a contact by its ID",
         "security": [
           {
             "bearerAuth": []
@@ -188,27 +103,28 @@
           {
             "in": "path",
             "name": "contactId",
-            "required": true,
             "schema": {
-              "type": "string",
-              "example": "65e4decdd286b30065d54af9"
-            }
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the contact to delete"
           }
         ],
         "responses": {
-          "204": {
-            "description": "Delete contact by id",
+          "200": {
+            "description": "Contact deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "status"
-                  ],
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 204
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully deleted the contact!"
                     }
                   }
                 }
@@ -217,26 +133,6 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "description": "Contact not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Contact not found"
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       },
@@ -359,6 +255,7 @@
                 "required": [
                   "name",
                   "phoneNumber",
+                  "email",
                   "contactType"
                 ],
                 "properties": {
@@ -368,37 +265,26 @@
                     "example": "John Doe"
                   },
                   "phoneNumber": {
-                    "description": "Contact's phone number",
+                    "description": "Contact's number",
                     "type": "string",
-                    "example": 380932368610
+                    "example": "30932368610"
                   },
                   "email": {
                     "description": "Contact's email",
                     "type": "string",
                     "example": "n.kopilchak@gmail.com"
                   },
-                  "isFavorite": {
-                    "description": "Favorite contact",
-                    "type": "boolean",
-                    "example": true
-                  },
                   "contactType": {
-                    "description": "Which group contact belongs to",
+                    "description": "Number type",
                     "type": "string",
                     "enum": [
                       "work",
                       "home",
                       "personal"
-                    ],
-                    "example": "work"
-                  },
-                  "userId": {
-                    "description": "Contact's  id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
+                    ]
                   },
                   "photo": {
-                    "description": "Link to contact's photo",
+                    "description": "Contact's photo",
                     "type": "string",
                     "format": "binary"
                   }
@@ -447,8 +333,8 @@
           "Contacts"
         ],
         "summary": "Get list of contacts",
-        "operationId": "getContact",
-        "description": "Get list of contacts with this endpoint",
+        "operationId": "getContacts",
+        "description": "Get a list of contacts with this endpoint",
         "security": [
           {
             "bearerAuth": []
@@ -461,7 +347,8 @@
             "schema": {
               "type": "integer"
             },
-            "example": 1
+            "example": 1,
+            "description": "Page number for pagination"
           },
           {
             "in": "query",
@@ -469,7 +356,8 @@
             "schema": {
               "type": "integer",
               "example": 10
-            }
+            },
+            "description": "Number of contacts per page"
           },
           {
             "in": "query",
@@ -478,7 +366,7 @@
               "type": "string",
               "example": "name"
             },
-            "description": "All contact's fields can be mentioned. Default value - _id"
+            "description": "Field by which contacts should be sorted. Default is '_id'"
           },
           {
             "in": "query",
@@ -490,20 +378,36 @@
                 "desc"
               ],
               "example": "asc"
-            }
+            },
+            "description": "Sorting order: 'asc' for ascending, 'desc' for descending"
           },
           {
             "in": "query",
             "name": "contactType",
             "schema": {
               "type": "string",
-              "example": "home"
-            }
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ],
+              "example": "work"
+            },
+            "description": "Filter contacts by contact type"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "example": "John",
+            "description": "Filter contacts by name"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully found contacts!",
+            "description": "Successfully retrieved contacts",
             "content": {
               "application/json": {
                 "schema": {
@@ -520,12 +424,12 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully found contacts!"
+                      "example": "Successfully retrieved contacts!"
                     },
                     "data": {
                       "type": "object",
                       "required": [
-                        "contacts",
+                        "data",
                         "page",
                         "perPage",
                         "totalItems",
@@ -542,27 +446,27 @@
                         },
                         "page": {
                           "type": "number",
-                          "example": 2
+                          "example": 1
                         },
                         "perPage": {
                           "type": "number",
-                          "example": 4
+                          "example": 10
                         },
                         "totalItems": {
                           "type": "number",
-                          "example": 4
+                          "example": 50
                         },
                         "totalPages": {
                           "type": "number",
-                          "example": 4
+                          "example": 5
                         },
                         "hasNextPage": {
                           "type": "boolean",
-                          "example": false
+                          "example": true
                         },
                         "hasPreviousPage": {
                           "type": "boolean",
-                          "example": true
+                          "example": false
                         }
                       }
                     }
