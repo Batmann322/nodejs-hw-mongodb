@@ -1,17 +1,18 @@
 tags:
   - Contacts
-summary: Update contact by id
-operationId: updateContactById
-description: 'Update contact by id'
+summary: Update a contact
+operationId: updateContact
+description: 'Partially update a contact by ID'
 security:
   - bearerAuth: []
 parameters:
   - in: path
     name: contactId
+    required: true
     schema:
       type: string
-    required: true
-    description: The ID of the contact to update
+      example: '66d9f6b1d0ba7799fa41e0e0'
+    description: 'ID of the contact to update'
 requestBody:
   content:
     multipart/form-data:
@@ -21,31 +22,48 @@ requestBody:
           name:
             description: "Contact's name"
             type: string
-            example: 'John Doe'
+            example: 'Updated Name'
           phoneNumber:
             description: "Contact's phone number"
             type: string
-            example: 380932368610
+            example: '+380932368610'
           email:
             description: "Contact's email"
             type: string
             example: n.kopilchak@gmail.com
-          isFavorite:
-            description: 'Favorite contact'
+          isFavourite:
+            description: 'Is contact a favorite'
             type: boolean
             example: true
           contactType:
-            description: 'Which group contact belongs to'
+            description: 'Type of contact'
             type: string
-            enum: ['work', 'personal']
-            example: 'work'
-          photo:
-            description: "Link to contact's photo"
-            type: string
-            format: binary
+            enum: ['work', 'home', 'personal']
 responses:
   '200':
-    description: Contact updated successfully
+    description: Successfully updated contact
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully updated contact with id 66d9f6b1d0ba7799fa41e0e0!
+            data:
+              type: object
+              $ref: '../../components/schemas/contact.yaml'
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '404':
+    description: Contact not found
     content:
       application/json:
         schema:
@@ -53,11 +71,7 @@ responses:
           properties:
             status:
               type: integer
-              example: 200
+              example: 404
             message:
               type: string
-              example: Successfully patched the contact!
-            data:
-              $ref: '../../components/schemas/contact.yaml'
-  '401':
-    $ref: '../../components/responses/401.yaml'
+              example: Contact with id 66d9f6b1d0ba7799fa41e0e0 not found.
