@@ -1,40 +1,48 @@
 type: object
 required:
-  - contactId
   - name
   - phoneNumber
-  - email
   - isFavourite
   - contactType
 properties:
-  contactId:
-    description: 'Contacts id'
+  _id:
+    description: "Contacts's id (auto-generate)"
     type: string
-    example: 66d9f6b1d0ba7799fa41e0e0
+    example: 66e565c67f1fac6f8a827cd6
+  userId:
+    description: "User's id who contact belong (auto-generate)"
+    type: string
+    example: 65e4decdd286b30065d54af9
   name:
-    description: 'Contacts name'
+    description: "Contacts's name"
     type: string
     example: 'John Doe'
   phoneNumber:
-    description: 'Contacts number'
+    description: "Contacts's phone number"
     type: string
     example: +380932368610
   email:
-    description: 'Contacts email'
+    description: "Contacts's email"
     type: string
+    example: n.kopilchak@gmail.com
   isFavourite:
-    description: 'Is Contact favorite'
+    description: 'Contact marked as favourite in list'
     type: boolean
     example: false
   contactType:
-    description: 'Contact type'
+    description: 'Type of contact'
     type: string
-    enum: ['work', 'home', 'personal']
-  userId:
-    description: 'Contacts user id'
-    type: string
-    example: 66d9f6b1d0ba7799fa41e0e0
+    enum: ['personal', 'work', 'home']
+    example: personal
   photo:
-    description: "Link to movie's poster"
+    description: "Link to contacts's photo"
     type: string
     example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
+  createdAt:
+    description: 'Date of contact created (auto generate)'
+    type: string
+    example: 2024-09-14T20:54:41.711Z
+  updatedAt:
+    description: 'Date of contact updated (auto generate)'
+    type: string
+    example: 2024-09-14T20:54:41.711Z

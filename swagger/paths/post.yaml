@@ -1,8 +1,8 @@
 tags:
   - Contacts
-summary: Create contacts
-operationId: createContacts
-description: 'Create a Contact with payload'
+summary: Create contact
+operationId: createContact
+description: 'Create a contact with payload'
 security:
   - bearerAuth: []
 requestBody:
@@ -13,30 +13,33 @@ requestBody:
         required:
           - name
           - phoneNumber
-          - email
-          - isFavourite
           - contactType
-          - photo
         properties:
           name:
-            description: 'Contacts name'
+            description: "Contacts's name"
             type: string
-            example: 'Jpni Dep'
+            example: 'John Doe'
           phoneNumber:
-            description: 'Contacts number'
+            description: "Contacts's phone number"
             type: string
             example: +380932368610
           email:
-            description: 'Contacts email'
+            description: "Contacts's email"
             type: string
+            example: n.kopilchak@gmail.com
           isFavourite:
-            description: 'Is Contact favorite'
+            description: 'Contact marked as favourite in list'
             type: boolean
             example: false
           contactType:
-            description: 'Contact type'
+            description: 'Type of contact'
             type: string
-            enum: ['work', 'home', 'personal']
+            enum: ['personal', 'work', 'home']
+            example: personal
+          photo:
+            description: "Link to contacts's photo"
+            type: string
+            format: binary
 responses:
   '201':
     description: Creates a contact
